@@ -8,7 +8,7 @@ const guildId = '1298304487605403658';
 import fs from 'node:fs';
 
 const commands = [];
-const commandFiles = fs.readdirSync('./gcommands').filter(file => file.endsWith('.js'));
+const commandFiles = fs.readdirSync('./gcommands').filter(file => file.endsWith('.mjs'));
 
 for (const file of commandFiles) {
   const command = await import(`./gcommands/${file}`);
