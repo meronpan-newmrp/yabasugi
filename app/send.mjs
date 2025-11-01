@@ -20,9 +20,9 @@ const client = new Client({
 
 client.once('ready', async () => {
     try {
-        const channel = await client.channels.fetch('1287084831871860880');
+        const channel = await client.channels.fetch(process.argv[2]);
         if (channel && channel.isTextBased()) {
-            await channel.send('シナリオできた？');
+            await channel.send(process.argv[3]); //引数1(ID)に引数2を送信
         } else {
             console.error('指定したチャンネルが見つからないか、テキストチャンネルではありません');
         }
