@@ -1,4 +1,5 @@
-const { REST, Routes } = require('discord.js');
+//ギルドコマンドを登録する
+const { REST, Routes } = require('discord.js'); 
 
 const token = process.env.TOKEN
 const clientId = process.env.APPLICATION_ID
