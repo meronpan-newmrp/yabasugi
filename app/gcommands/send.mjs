@@ -27,16 +27,13 @@ const client = new Client({
   ],
 });
 
-client.once('ready', async () => {
-    try {
+export async function execute(interaction){
         const channel = await client.channels.fetch(interaction.options.getString('id'));
         if (channel && channel.isTextBased()) {
             await channel.send(interaction.options.getString('text')); //idにtextを送信
         } else {
             await interaction.reply('指定したチャンネルが見つからないか、テキストチャンネルではありません');
         }
-    } catch (error) {
-        await interaction.reply('エラーが発生しました:', error);
     }
 });
 
