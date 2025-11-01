@@ -1,17 +1,17 @@
 //ギルドコマンドを登録する
 import { REST, Routes } from 'discord.js';
 
-const token = process.env.TOKEN
-const clientId = process.env.APPLICATION_ID
-const guildId = '1298304487605403658'
+const token = process.env.TOKEN;
+const clientId = process.env.APPLICATION_ID;
+const guildId = '1298304487605403658';
 
-const fs = require('node:fs');
+import fs from 'node:fs';
 
 const commands = [];
 const commandFiles = fs.readdirSync('./gcommands').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
-  const command = require(`./gcommands/${file}`);
+  import command from `./gcommands/${file}`;
   commands.push(command.data.toJSON());
 }
 
