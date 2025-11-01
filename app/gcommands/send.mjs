@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from 'discord.js';
+wimport { SlashCommandBuilder,Client } from 'discord.js';
 
 export const data = new SlashCommandBuilder()
   .setName('send')
