@@ -5,7 +5,7 @@ export const data = new SlashCommandBuilder()
   .setDescription('チャンネルに送信')
   .addStringOption(option =>
     option
-      .setName('ID')
+      .setName('id')
       .setDescription('チャンネルID')
       .setRequired(true)
   );
@@ -29,14 +29,14 @@ const client = new Client({
 
 client.once('ready', async () => {
     try {
-        const channel = await client.channels.fetch(process.argv[2]);
+        const channel = await client.channels.fetch(interaction.options.getString('id'));
         if (channel && channel.isTextBased()) {
-            await channel.send(process.argv[3]); //引数1(ID)に引数2を送信
+            await channel.send(interaction.options.getString('text')); //idにtextを送信
         } else {
-            console.error('指定したチャンネルが見つからないか、テキストチャンネルではありません');
+            await interaction.reply('指定したチャンネルが見つからないか、テキストチャンネルではありません');
         }
     } catch (error) {
-        console.error('エラーが発生しました:', error);
+        await interaction.reply('エラーが発生しました:', error);
     }
 });
 
