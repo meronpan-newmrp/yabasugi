@@ -8,7 +8,7 @@ export const data = new SlashCommandBuilder()
       .setName('id')
       .setDescription('チャンネルID')
       .setRequired(true)
-  );
+  )
   .addStringOption(option =>
     option
       .setName('text')
