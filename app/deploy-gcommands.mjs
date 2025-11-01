@@ -11,7 +11,7 @@ const commands = [];
 const commandFiles = fs.readdirSync('./gcommands').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
-  import command from `./gcommands/${file}`;
+  const command = await import(`./gcommands/${file}`);
   commands.push(command.data.toJSON());
 }
 
