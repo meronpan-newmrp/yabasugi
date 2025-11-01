@@ -1,13 +1,22 @@
-import fs from "fs";
-import path from "path";
-import express from "express";
-import { Client, Collection, Events, GatewayIntentBits, ActivityType, EmbedBuilder } from "discord.js";
-import CommandsRegister from "./regist-commands.mjs";
-import Notification from "./models/notification.mjs";
-import YoutubeFeeds from "./models/youtubeFeeds.mjs";
-import YoutubeNotifications from "./models/youtubeNotifications.mjs";
-import Sequelize from "sequelize";
-import Parser from 'rss-parser';
+import { SlashCommandBuilder } from 'discord.js';
+
+export const data = new SlashCommandBuilder()
+  .setName('send')
+  .setDescription('チャンネルに送信')
+  .addStringOption(option =>
+    option
+      .setName('ID')
+      .setDescription('チャンネルID')
+      .setRequired(true)
+  );
+  .addStringOption(option =>
+    option
+      .setName('text')
+      .setDescription('送る内容')
+      .setRequired(true)
+  );
+
+
 
 const client = new Client({
   intents: [
