@@ -16,24 +16,39 @@ export const data = new SlashCommandBuilder()
       .setRequired(true)
   );
 
-
-
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
-    GatewayIntentBits.GuildVoiceStates,
   ],
 });
 
-export async function execute(interaction){
-        const channel = await client.channels.fetch(interaction.options.getString('id'));
-        if (channel && channel.isTextBased()) {
-            await channel.send(interaction.options.getString('text')); //idにtextを送信
-        } else {
-            await interaction.reply('指定したチャンネルが見つからないか、テキストチャンネルではありません');
-        }
-};
+// コマンド実行処理
+export async function execute(interaction) {
+  const channel = await client.channels.fetch(interaction.options.getString('id'));
+  if (channel && channel.isTextBased()) {
+    await channel.send(interaction.options.getString('text'));
+    await interaction.reply({ content: 'メッセージを送信しました', ephemeral: true });
+  } else {
+    await interaction.reply({ content: '指定したチャンネルが見つからないか、テキストチャンネルではありません', ephemeral: true });
+  }
+}
+
+// interactionCreateイベントでコマンドを監視してexecuteを呼ぶ
+client.on('interactionCreate', async (interaction) => {
+  if (!interaction.isChatInputCommand()) return;
+
+  if (interaction.commandName === 'send') {
+    try {
+      await execute(interaction);
+    } catch (error) {
+      console.error(error);
+      if (!interaction.replied) {
+        await interaction.reply({ content: 'エラーが発生しました', ephemeral: true });
+      }
+    }
+  }
+});
 
 client.login(process.env.TOKEN);
