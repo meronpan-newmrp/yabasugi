@@ -34,6 +34,6 @@ export async function execute(interaction){
         } else {
             await interaction.reply('指定したチャンネルが見つからないか、テキストチャンネルではありません');
         }
-});
+};
 
 client.login(process.env.TOKEN);
