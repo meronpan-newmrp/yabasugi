@@ -2,7 +2,7 @@ import { SlashCommandBuilder, Client, GatewayIntentBits, EmbedBuilder } from 'di
 
 // コマンドデータ定義
 export const data = new SlashCommandBuilder()
-  .setName('yomu')
+  .setName('kyomu')
   .setDescription('詠むよ')
   .addSubcommand(subcommand =>
     subcommand
