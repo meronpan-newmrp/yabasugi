@@ -24,18 +24,29 @@ const client = new Client({
   ],
 });
 
-// コマンド実行処理
 export async function execute(interaction) {
-  const channel = await client.channels.fetch(interaction.options.getString('id'));
-  if (channel && channel.isTextBased()) {
-    await channel.send(interaction.options.getString('text'));
-    await interaction.reply({ content: 'メッセージを送信しました', ephemeral: true });
-  } else {
-    await interaction.reply({ content: '指定したチャンネルが見つからないか、テキストチャンネルではありません', ephemeral: true });
+  // 3秒ルールを守るために最初にdeferReplyで「考え中」を出す
+  await interaction.deferReply({ ephemeral: true });
+
+  const channelId = interaction.options.getString('id');
+  const messageText = interaction.options.getString('text');
+
+  try {
+    const channel = await client.channels.fetch(channelId);
+
+    if (channel && channel.isTextBased()) {
+      await channel.send(messageText);
+      // 処理完了後に応答を編集して通知
+      await interaction.editReply('メッセージを送信しました');
+    } else {
+      await interaction.editReply('指定したチャンネルが見つからないか、テキストチャンネルではありません');
+    }
+  } catch (error) {
+    console.error(error);
+    await interaction.editReply('エラーが発生しました');
   }
 }
 
-// interactionCreateイベントリスナー追加（ここが重要）
 client.on('interactionCreate', async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
@@ -45,7 +56,7 @@ client.on('interactionCreate', async (interaction) => {
     } catch (error) {
       console.error(error);
       if (!interaction.replied) {
-        await interaction.reply({ content: 'エラーが発生しました', ephemeral: true });
+        await interaction.reply({ content: '処理中にエラーが発生しました', ephemeral: true });
       }
     }
   }
