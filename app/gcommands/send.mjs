@@ -35,7 +35,7 @@ export async function execute(interaction) {
   }
 }
 
-// interactionCreateイベントでコマンドを監視してexecuteを呼ぶ
+// interactionCreateイベントリスナー追加（ここが重要）
 client.on('interactionCreate', async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
