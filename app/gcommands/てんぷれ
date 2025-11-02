@@ -1,0 +1,29 @@
+import { SlashCommandBuilder, Client, GatewayIntentBits } from 'discord.js';
+
+export const data = new SlashCommandBuilder()
+  .setName('send')
+  .setDescription('チャンネルに送信')
+  .addStringOption(option =>
+    option
+      .setName('id')
+      .setDescription('チャンネルID')
+      .setRequired(true)
+  )
+  .addStringOption(option =>
+    option
+      .setName('text')
+      .setDescription('送る内容')
+      .setRequired(true)
+  );
+
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+  ],
+});
+
+
+
+client.login(process.env.TOKEN);
