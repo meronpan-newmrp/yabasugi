@@ -1,6 +1,6 @@
-import { SlashCommandBuilder, Client, GatewayIntentBits, EmbedBuilder } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 
-// コマンドデータ定義
+// コマンドデータ定義（execute関数の外で定義）
 export const data = new SlashCommandBuilder()
   .setName('yomu')
   .setDescription('詠むよ')
@@ -15,7 +15,7 @@ export const data = new SlashCommandBuilder()
       .setDescription('やばすぎ短歌を')
   );
 
-// 単語リスト（例を簡略化）
+// 単語リストなど関数外で定義
 const words = [
   { word: "やば", len: 2 },
   { word: "そ", len: 1 },
@@ -25,7 +25,6 @@ const words = [
   { word: "ちゃん", len: 2 },
 ];
 
-// 単語から指定長さの文字列を生成
 function generateLine(targetLength) {
   let length = 0;
   let lineWords = [];
@@ -39,16 +38,14 @@ function generateLine(targetLength) {
   return lineWords.join("");
 }
 
-// 俳句生成関数
-function yomu() {
+function generateHaiku() {
   const line1 = generateLine(5);
   const line2 = generateLine(7);
   const line3 = generateLine(5);
   return `${line1}\n${line2}\n${line3}`;
 }
 
-// 短歌生成関数
-function tyomu() {
+function generateTanka() {
   const line1 = generateLine(5);
   const line2 = generateLine(7);
   const line3 = generateLine(5);
@@ -57,35 +54,24 @@ function tyomu() {
   return `${line1}\n${line2}\n${line3}\n${line4}\n${line5}`;
 }
 
-const client = new Client({
-  intents: [GatewayIntentBits.Guilds],
-});
+// execute関数はファイル内でexportする
+export async function execute(interaction) {
+  const sub = interaction.options.getSubcommand();
 
-// コマンド実行処理
-client.on('interactionCreate', async (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
-
-  if (interaction.commandName === 'yomu') {
-    let text = "";
-    const sub = interaction.options.getSubcommand();
-
-    if (sub === 'haiku') {
-      text = yomu();
-    } else if (sub === 'tanka') {
-      text = tyomu();
-    } else {
-      await interaction.reply('無効なサブコマンドです');
-      return;
-    }
-
-    // 埋め込みメッセージ作成
-    const embed = new EmbedBuilder()
-      .setTitle(sub === 'haiku' ? '生成された俳句' : '生成された短歌')
-      .setDescription(text)
-      .setColor(0x0099FF);
-
-    await interaction.reply({ embeds: [embed] });
+  let text = '';
+  if (sub === 'haiku') {
+    text = generateHaiku();
+  } else if (sub === 'tanka') {
+    text = generateTanka();
+  } else {
+    await interaction.reply('無効なサブコマンドです');
+    return;
   }
-});
 
-client.login(process.env.TOKEN);
+  const embed = new EmbedBuilder()
+    .setTitle(sub === 'haiku' ? '生成された俳句' : '生成された短歌')
+    .setDescription(text)
+    .setColor(0x0099FF);
+
+  await interaction.reply({ embeds: [embed] });
+}
